@@ -1,0 +1,28 @@
+name: Build Saboteur Cortex
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v4
+
+    - name: Configuration de CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Compilation (VST3 + Standalone)
+      run: cmake --build build --config Release
+
+    - name: Sauvegarde VST3 et Standalone (Windows)
+      uses: actions/upload-artifact@v4
+      with:
+        name: SaboteurCortex-Windows-VST3-Standalone
+        path: |
+          build/**/*_artefacts/Release/VST3/*.vst3
+          build/**/*_artefacts/Release/Standalone/*.exe
